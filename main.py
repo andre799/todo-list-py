@@ -48,6 +48,9 @@ def index():
 
 @app.route('/create', methods=['POST'])
 def create():
+  if not 'user_id' in session:
+    return redirect('/login')
+
   title = request.form.get('title')
   conn = sqlite3.connect('database.db')
   cursor = conn.cursor()
@@ -61,16 +64,23 @@ def create():
 
 @app.route('/delete/<id>')
 def delete(id):
+  if not 'user_id' in session:
+    return redirect('/login')
+
   conn = sqlite3.connect('database.db')
   cursor = conn.cursor()
-  cursor.execute(
-    'DELETE FROM todos WHERE id = ?',(id,))
+  cursor.execute("""
+    DELETE FROM todos WHERE id = ?
+  """,(id,))
   conn.commit()
   conn.close()
   return redirect('/')
 
 @app.route('/complete/<id>', )
 def complete(id):
+  if not 'user_id' in session:
+    return redirect('/login')
+
   conn = sqlite3.connect('database.db')
   cursor = conn.cursor()
   cursor.execute(
@@ -81,6 +91,9 @@ def complete(id):
 
 @app.route('/update/<id>', methods=['POST'])
 def update(id):
+  if not 'user_id' in session:
+    return redirect('/login')
+    
   title = request.form.get('title')
   conn = sqlite3.connect('database.db')
   cursor = conn.cursor()
